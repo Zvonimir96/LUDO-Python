@@ -5,10 +5,12 @@ class Color:
     colors = []
     colorOrder = 0
     changeRate = 0.1
-    s = 1
-    v = 1
+    V = 1
+    S = 1
 
     def __init__(self):
+        self.v = 1
+        self.fadeDown = True
         self.color = Color.colorOrder * 0.25
         self.colorOrder = Color.colorOrder
 
@@ -16,7 +18,7 @@ class Color:
         Color.colorOrder += 1
 
     def get(self):
-        rgbColor = colorsys.hsv_to_rgb(self.color, Color.s, Color.v)
+        rgbColor = colorsys.hsv_to_rgb(self.color, Color.S, Color.V)
         return rgbColor[0] * 255, rgbColor[1] * 255, rgbColor[2] * 255
 
     def changeColorClockwise(self):

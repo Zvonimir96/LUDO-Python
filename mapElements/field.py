@@ -105,7 +105,6 @@ class Field:
 
         if self.boxMode == 5:
             pygame.draw.circle(screen, self.color, [self.x, self.y], diceCircleDiameter)
-            pygame.draw.circle(screen, self.color, [self.x, self.y], diceCircleDiameter, width=diceCircleDiameter)
 
     def getPosition(self):
         return self.x, self.y

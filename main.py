@@ -1,19 +1,44 @@
 import pygame
 
+import player
 from buttonListener import ButtonListener
 from dice import Dice
+from enumerator.gameState import GameState
 from map import Map
 from player import Player
-from enumerator.gameState import gameState, gameEnumerator
 
 pygame.init()
 
 running = True
 
 screen = pygame.display.set_mode([1000, 1000])
-
 Map.create()
 Player.create()
+
+
+def startGame():
+    for player in Player.players:
+        if not player.playable:
+            player.setInactive()
+        else:
+            Player.onTurn = player
+
+
+def nextPlayer():
+    orderNumber = Player.onTurn.getOrderNumber() + 1
+
+    if orderNumber >= len(Player.players):
+        orderNumber = 0
+
+    Player.onTurn = Player.players[orderNumber]
+
+    global state
+    state = GameState(orderNumber)
+
+    if not Player.onTurn.isPlayable():
+        nextPlayer()
+
+count = 0
 
 while running:
     for event in pygame.event.get():
@@ -35,9 +60,17 @@ while running:
                 Button.changeImages()
             """
             if event.key == pygame.K_1:
-                Player.startGame()
-                gameState = gameEnumerator[1]
-                print(gameState)
+                startGame()
+                nextPlayer()
+
+            if event.key == pygame.K_2:
+                Dice.roll(Player.onTurn.getColor())
+
+            if event.key == pygame.K_3:
+                nextPlayer()
+
+            if event.key == pygame.K_4:
+                print(count)
 
     screen.fill((0, 0, 0))
     Map.draw(screen)

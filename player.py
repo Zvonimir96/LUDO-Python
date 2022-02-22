@@ -1,9 +1,9 @@
 from buttonListener import ButtonListener
 from color import Color
+from enumerator.gameState import GameState, state
 from figure import Figure
 from mapElements.button import Button
 from mapElements.house import House
-from enumerator.gameState import gameState, gameEnumerator
 from settings import blackColor
 
 
@@ -15,6 +15,7 @@ class Player:
         self.playable = False
 
         self.orderNumber = orderNumber
+        self.enum = GameState(orderNumber)
         self.house = House.getHouse(orderNumber)
         self.figures = Figure.createPlayerFigures(self)
 
@@ -31,26 +32,26 @@ class Player:
             button.changeColor(self.getColor())
 
     def actionLeft(self):
-        if gameState == gameEnumerator[0]:
+        if state is GameState.SelectPlayerColor:
             self.changeColorClockwise()
-        elif gameState == "Player" + str(self.orderNumber):
-            print(self.orderNumber)
+        elif state is self.enum:
+            pass
         else:
             pass
 
     def actionRight(self):
-        if gameState == gameEnumerator[0]:
+        if state is GameState.SelectPlayerColor:
             self.changeColorCounterClockwise()
-        elif gameState == "Player" + str(self.orderNumber):
-            print(self.orderNumber)
+        elif state is self.enum:
+            pass
         else:
             pass
 
     def actionConfirm(self):
-        if gameState == gameEnumerator[0]:
+        if state is GameState.SelectPlayerColor:
             self.setPlayable()
-        elif gameState == "Player" + str(self.orderNumber):
-            print(self.orderNumber)
+        elif state is self.enum:
+            pass
         else:
             pass
 
@@ -82,10 +83,12 @@ class Player:
             button.changeColor(self.getColor())
 
     def setPlayable(self):
-        gameEnumerator.append("Player" + str(self.orderNumber))
-
         self.playable = True
         self.disableButtons()
+
+    def setInactive(self):
+        self.disableButtons()
+        self.changeColor(blackColor)
 
     def enableButtons(self):
         for button in self.buttons:
@@ -99,17 +102,10 @@ class Player:
         for figure in self.figures:
             figure.changeColor(color)
 
-    @staticmethod
-    def startGame():
-        print("asd")
-        for player in Player.players:
-            if not player.playable:
-                player.changeColor(blackColor)
-                player.disableButtons()
+    def isPlayable(self):
+        return self.playable
 
     @staticmethod
     def create():
-        Player(0)
-        Player(1)
-        Player(2)
-        Player(3)
+        for i in range(4):
+            Player(i)

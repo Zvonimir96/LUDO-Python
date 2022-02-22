@@ -1,6 +1,6 @@
 import pygame
 
-from settings import numberOfArrowImages, arrowImageName, blackColor
+from settings import numberOfArrowImages, arrowImageName
 from settings import numberOfConfirmImages, confirmImageName
 from settings import imageScale
 
