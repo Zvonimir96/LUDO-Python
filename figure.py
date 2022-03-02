@@ -11,12 +11,14 @@ class Figure:
         self.field = field
         self.field.setColor(())
 
-    def changeColor(self, color=None):
-        if color is None:
-            self.field.setColor(self.player.getColor())
-        else:
-            self.field.setColor(color)
+    def setColor(self):
+        self.field.setColor(self.player.getColor())
 
     @staticmethod
     def createPlayerFigures(player):
-        return [Figure(player, 0), Figure(player, 1), Figure(player, 2), Figure(player, 3)]
+        figures = []
+
+        for i in range(4):
+            figures.append(Figure(player, i))
+
+        return figures
