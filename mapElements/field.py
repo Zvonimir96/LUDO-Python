@@ -28,6 +28,7 @@ class Field(Neopixel):
 
         self.boxMode = boxMode
         self.circleDiameter = 15
+        self.circleDiameterForHouses = 13
         self.circleWidth = 3
 
         startDeviation = 10
@@ -107,6 +108,11 @@ class Field(Neopixel):
 
         if self.boxMode == 5:
             pygame.draw.circle(screen, self.color.get(), [self.x, self.y], diceCircleDiameter)
+
+        if self.boxMode == 6:
+            pygame.draw.circle(screen, self.color.get(), [self.x, self.y], self.circleDiameterForHouses)
+            pygame.draw.circle(screen, whiteColor, [self.x, self.y], self.circleDiameterForHouses,
+                               width=self.circleWidth)
 
     def setColor(self, color):
         super().setColor(color)

@@ -1,4 +1,5 @@
 from mapElements.buttons.button import Button
+from settings import center
 
 
 class DiceButton:
@@ -9,7 +10,7 @@ class DiceButton:
         self.buttonNumber = Button.buttonNumber
         Button.buttonNumber = Button.buttonNumber + 1
 
-        self.position = (500, 500)
+        self.position = center
         self.width = 100
         self.height = 100
 

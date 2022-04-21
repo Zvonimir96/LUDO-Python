@@ -1,6 +1,6 @@
 import math
+from settings import center
 
-from color import Color
 from mapElements.field import Field
 from settings import diceOffset, rainbowRate, startRollSpeed, stopRollSpeed, iterationConstant, iterationScale
 import random
@@ -8,15 +8,16 @@ import random
 
 class Dice:
     fields = []
-    numbers = [[0],
-               [3, 4],
-               [0, 3, 4],
-               [1, 3, 4, 6],
-               [0, 1, 3, 4, 6],
-               [1, 2, 3, 4, 5, 6],
-               [1, 2, 3, 4, 5, 6, 7]]
+    numbers = [[8],
+               [2, 6],
+               [2, 6, 8],
+               [0, 2, 4, 6],
+               [0, 2, 4, 6, 8],
+               [0, 1, 2, 4, 5, 6],
+               [1, 2, 3, 4, 5, 6, 7, 8, 9]]
 
-    animation = 1
+    animation = 0
+    rotation = 0
     number = 0
     hue = 0
 
@@ -28,15 +29,19 @@ class Dice:
 
     @staticmethod
     def create():
-        Dice.fields.append(Field((500, 500), 5))
+        Dice.fields.append(Field((center[0] - diceOffset, center[1] - diceOffset), 5))
+        Dice.fields.append(Field((center[0], center[1] - diceOffset), 5))
+        Dice.fields.append(Field((center[0] + diceOffset, center[1] - diceOffset), 5))
 
-        Dice.fields.append(Field((500 - diceOffset, 500 - diceOffset), 5))
-        Dice.fields.append(Field((500 - diceOffset, 500), 5))
-        Dice.fields.append(Field((500 - diceOffset, 500 + diceOffset), 5))
+        Dice.fields.append(Field((center[0] + diceOffset, center[1]), 5))
+        Dice.fields.append(Field((center[0] + diceOffset, center[1] + diceOffset), 5))
 
-        Dice.fields.append(Field((500 + diceOffset, 500 - diceOffset), 5))
-        Dice.fields.append(Field((500 + diceOffset, 500), 5))
-        Dice.fields.append(Field((500 + diceOffset, 500 + diceOffset), 5))
+        Dice.fields.append(Field((center[0], center[1] + diceOffset), 5))
+        Dice.fields.append(Field((center[0] - diceOffset, center[1] + diceOffset), 5))
+
+        Dice.fields.append(Field((center[0] - diceOffset, center[1]), 5))
+
+        Dice.fields.append(Field(center, 5))
 
     @staticmethod
     def setNumber():
@@ -44,8 +49,17 @@ class Dice:
             Dice.fields[field - 1].turnOff()
 
         for field in Dice.numbers[Dice.number - 1]:
-            Dice.fields[field].setHue(Dice.hue)
-            Dice.fields[field].setFullBrightness()
+            rotatedField = field + 2 * Dice.rotation
+
+            if field == 8:
+                rotatedField = 8
+            elif rotatedField >= 8:
+                rotatedField = rotatedField % 8
+
+            print(rotatedField)
+
+            Dice.fields[rotatedField].setHue(Dice.hue)
+            Dice.fields[rotatedField].setFullBrightness()
 
     @staticmethod
     def setColor(color):
@@ -83,7 +97,7 @@ class Dice:
                 Dice.iteration += 1
             elif Dice.animation == 1:
                 Dice.iteration += iterationScale/(1 + math.exp(iterationConstant *
-                                                               (startRollSpeed - (stopRollSpeed - startRollSpeed)/2)))
+                            (startRollSpeed - (stopRollSpeed - startRollSpeed)/2)))
 
             if Dice.changeNumberIteration >= stopRollSpeed:
                 Dice.rolling = False
@@ -104,6 +118,10 @@ class Dice:
     @staticmethod
     def stopRainbow():
         Dice.rainbow = False
+
+    @staticmethod
+    def setRotation(rotation):
+        Dice.rotation = rotation
 
     @staticmethod
     def doRainbow():

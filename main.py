@@ -1,7 +1,9 @@
 import pygame
 import time
 
+from color import Color
 from mapElements.buttons.buttonListener import ButtonListener
+from mapElements.buttons.diceButton import DiceButton
 from mapElements.dice import Dice
 from map import Map
 from mapElements.buttons.button import Button
@@ -14,7 +16,8 @@ pygame.init()
 clock = time.time() + fadeTime
 running = True
 
-screen = pygame.display.set_mode([1000, 1000])
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
 Map.create()
 Player.create()
 
@@ -27,6 +30,8 @@ while running:
             ButtonListener.buttonClicked(Button.isAnyButtonClicked(pygame.mouse.get_pos()))
 
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
             if event.key == pygame.K_2:
                 pass
 

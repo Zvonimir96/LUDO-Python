@@ -2,13 +2,15 @@ import pygame
 
 from mapElements.field import Field
 
+from settings import center, whiteColor
+
 from settings import lineWidth
-from settings import whiteColor
 from settings import pathLength
 
 
 class SafeHouse:
     safeHouses = []
+    fieldMode = 6
 
     def __init__(self, fields, exitField):
         SafeHouse.safeHouses.append(self)
@@ -46,33 +48,37 @@ class SafeHouse:
             safeHouse.draw(screen)
 
     @staticmethod
-    def create(fieldMode=0):
+    def create():
         startIndex = 1
 
-        offsetX = 150
-        offsetY = 150
-        offset = 50
+        offset = 30
+        offsetFromCenter = 100
 
-        fields = [Field((500, 500 - offsetY), fieldMode),
-                  Field((500, 500 - offset - offsetY), fieldMode),
-                  Field((500, 500 - offset * 2 - offsetY), fieldMode),
-                  Field((500, 500 - offset * 3 - offsetY), fieldMode)]
+        start1 = (center[0] - offsetFromCenter, center[1] - offsetFromCenter)
+        start2 = (center[0] + offsetFromCenter, center[1] - offsetFromCenter)
+        start3 = (center[0] + offsetFromCenter, center[1] + offsetFromCenter)
+        start4 = (center[0] - offsetFromCenter, center[1] + offsetFromCenter)
+
+        fields = [Field((start1[0], start1[1]), SafeHouse.fieldMode),
+                  Field((start1[0] - offset, start1[1] - offset), SafeHouse.fieldMode),
+                  Field((start1[0] - offset * 2, start1[1] - offset * 2), SafeHouse.fieldMode),
+                  Field((start1[0] - offset * 3, start1[1] - offset * 3), SafeHouse.fieldMode)]
         SafeHouse(fields, Field.fields[startIndex])
 
-        fields = [Field((500 + offsetX, 500), fieldMode),
-                  Field((500 + offset + offsetX, 500), fieldMode),
-                  Field((500 + offset * 2 + offsetX, 500), fieldMode),
-                  Field((500 + offset * 3 + offsetX, 500), fieldMode)]
+        fields = [Field((start2[0], start2[1]), SafeHouse.fieldMode),
+                  Field((start2[0] + offset, start2[1] - offset), SafeHouse.fieldMode),
+                  Field((start2[0] + offset * 2, start2[1] - offset * 2), SafeHouse.fieldMode),
+                  Field((start2[0] + offset * 3, start2[1] - offset * 3), SafeHouse.fieldMode)]
         SafeHouse(fields, Field.fields[startIndex + pathLength])
 
-        fields = [Field((500, 500 + offsetY), fieldMode),
-                  Field((500, 500 + offset + offsetY), fieldMode),
-                  Field((500, 500 + offset * 2 + offsetY), fieldMode),
-                  Field((500, 500 + offset * 3 + offsetY), fieldMode)]
+        fields = [Field((start3[0], start3[1]), SafeHouse.fieldMode),
+                  Field((start3[0] + offset, start3[1] + offset), SafeHouse.fieldMode),
+                  Field((start3[0] + offset * 2, start3[1] + offset * 2), SafeHouse.fieldMode),
+                  Field((start3[0] + offset * 3, start3[1] + offset * 3), SafeHouse.fieldMode)]
         SafeHouse(fields, Field.fields[startIndex + pathLength * 2])
 
-        fields = [Field((500 - offsetX, 500), fieldMode),
-                  Field((500 - offset - offsetX, 500), fieldMode),
-                  Field((500 - offset * 2 - offsetX, 500), fieldMode),
-                  Field((500 - offset * 3 - offsetX, 500), fieldMode)]
+        fields = [Field((start4[0], start4[1]), SafeHouse.fieldMode),
+                  Field((start4[0] - offset, start4[1] + offset), SafeHouse.fieldMode),
+                  Field((start4[0] - offset * 2, start4[1] + offset * 2), SafeHouse.fieldMode),
+                  Field((start4[0] - offset * 3, start4[1] + offset * 3), SafeHouse.fieldMode)]
         SafeHouse(fields, Field.fields[startIndex + pathLength * 3])

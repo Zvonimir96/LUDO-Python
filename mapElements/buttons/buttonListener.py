@@ -7,6 +7,8 @@ from player import Player
 
 
 class ButtonListener:
+    firstRoll = True
+
     @staticmethod
     def buttonClicked(buttonNumber):
         playerNumber = math.floor(buttonNumber/3)
@@ -20,11 +22,17 @@ class ButtonListener:
         if buttonNumber >= 12:
             if state == GameState.SelectPlayerColor:
                 ButtonListener.start()
-                return
-            elif state == GameState.Game:
                 Dice.disableFade()
-                DiceButton.disable()
-                Dice.roll()
+                Dice.setRotation(Player.playablePlayers[Player.playerOnTurn].orderNumber)
+
+            elif state == GameState.Game:
+                if ButtonListener.firstRoll:
+                    Dice.roll()
+                    ButtonListener.firstRoll = False
+
+                elif not Dice.rolling:
+                    ButtonListener.next()
+                    Dice.roll()
 
         #Left arrow click
         if function == 0:
@@ -59,6 +67,7 @@ class ButtonListener:
                 player.setInactive()
 
         Dice.setColor(Player.playablePlayers[0].getHue())
+        Dice.setRotation(Player.playerOnTurn)
         Dice.setFade()
         Dice.stopRainbow()
 
@@ -73,3 +82,4 @@ class ButtonListener:
 
         Player.playerOnTurn = nextPlayer
         Dice.setColor(Player.playablePlayers[Player.playerOnTurn].getHue())
+        Dice.setRotation(Player.playablePlayers[Player.playerOnTurn].orderNumber)

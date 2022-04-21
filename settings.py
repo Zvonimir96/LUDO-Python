@@ -4,6 +4,10 @@ colorChangeRate = 0.1
 lineWidth = 3
 pathLength = 13
 
+current_w = 1536
+current_h = 864
+center = (current_w/2, current_h/2)
+
 imageScale = 3
 numberOfArrowImages = 13
 arrowImageName = './resources/Arrows/arrow%.png'
@@ -22,7 +26,7 @@ rainbowRate = 0.005
 
 # Time in iterations
 startRollSpeed = 25
-stopRollSpeed = 100
+stopRollSpeed = 50
 
 iterationScale = 500
 iterationConstant = -0.487

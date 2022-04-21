@@ -1,5 +1,6 @@
+from color import Color
 from mapElements.buttons.diceButton import DiceButton
-from mapElements.dice import Dice
+from mapElements.dice import Dice, center
 from mapElements.buttons.arrowButton import ArrowButton
 from mapElements.buttons.button import Button
 from mapElements.field import Field
@@ -15,25 +16,33 @@ class Map:
         Path.create()
         House.create()
         SafeHouse.create()
-        Dice.create()
 
-        ArrowButton((300, 200), 45)
-        ArrowButton((200, 300), 225)
-        SubmitButton((250, 250), 0)
+        offsetFromCenter = 260
+        offset = 50
 
-        ArrowButton((800, 300), 315)
-        ArrowButton((700, 200), 135)
-        SubmitButton((750, 250), 0)
+        start1 = center[0] - offsetFromCenter, center[1]
+        start2 = center[0], center[1] - offsetFromCenter
+        start3 = center[0] + offsetFromCenter, center[1]
+        start4 = center[0], center[1] + offsetFromCenter
 
-        ArrowButton((700, 800), 225)
-        ArrowButton((800, 700), 45)
-        SubmitButton((750, 750), 0)
+        ArrowButton((start1[0], start1[1] - offset), 90)
+        ArrowButton((start1[0], start1[1] + offset), -90)
+        SubmitButton(start1, -90)
 
-        ArrowButton((200, 700), 135)
-        ArrowButton((300, 800), 315)
-        SubmitButton((250, 750), 0)
+        ArrowButton((start2[0] + offset, start2[1]), 0)
+        ArrowButton((start2[0] - offset, start2[1]), 180)
+        SubmitButton(start2, 180)
+
+        ArrowButton((start3[0], start3[1] - offset), 90)
+        ArrowButton((start3[0], start3[1] + offset), -90)
+        SubmitButton(start3, -90)
+
+        ArrowButton((start4[0] + offset, start4[1]), 0)
+        ArrowButton((start4[0] - offset, start4[1]), 180)
+        SubmitButton(start4, 0)
 
         DiceButton()
+        Dice.create()
 
         for button in Button.buttons:
             if button.buttonNumber != len(Button.buttons) - 1:

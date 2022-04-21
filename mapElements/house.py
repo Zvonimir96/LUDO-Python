@@ -1,13 +1,16 @@
 import pygame
 
+from settings import center, whiteColor
+
 from mapElements.field import Field
 
 from settings import lineWidth
-from settings import whiteColor
 from settings import pathLength
 
 
 class House:
+    mode = 1
+    fieldMode = 6
     houses = []
 
     def __init__(self, fields, startField):
@@ -47,32 +50,72 @@ class House:
             house.draw(screen)
 
     @staticmethod
-    def create(fieldMode=0):
-        startIndex = 2
+    def create():
+        if House.mode == 0:
+            startIndex = 2
+            offsetFromCenter = 166
+            offset = 30
 
-        position1 = (350, 350)
-        position2 = (300, 350)
-        position3 = (300, 300)
-        position4 = (350, 300)
+            start1 = (center[0] - offsetFromCenter, center[1])
+            start2 = (center[0], center[1] - offsetFromCenter)
+            start3 = (center[0] + offsetFromCenter, center[1])
+            start4 = (center[0], center[1] + offsetFromCenter)
 
-        fields = [Field(position1, fieldMode), Field(position2, fieldMode),
-                  Field(position3, fieldMode), Field(position4, fieldMode)]
-        House(fields, Field.fields[startIndex])
+            fields = [Field(start1, House.fieldMode),
+                      Field((start1[0] - offset, start1[1] - offset), House.fieldMode),
+                      Field((start1[0] - offset*2, start1[1]), House.fieldMode),
+                      Field((start1[0] - offset, start1[1] + offset), House.fieldMode)]
+            House(fields, Field.fields[startIndex])
 
-        fields = [Field((position1[0] + 300, position1[1]), fieldMode),
-                  Field((position2[0] + 400, position2[1]), fieldMode),
-                  Field((position3[0] + 400, position3[1]), fieldMode),
-                  Field((position4[0] + 300, position4[1]), fieldMode)]
-        House(fields, Field.fields[startIndex + pathLength])
+            fields = [Field(start2, House.fieldMode),
+                      Field((start2[0] - offset, start2[1] - offset), House.fieldMode),
+                      Field((start2[0], start2[1] - offset * 2), House.fieldMode),
+                      Field((start2[0] + offset, start2[1] - offset), House.fieldMode)]
+            House(fields, Field.fields[startIndex + pathLength])
 
-        fields = [Field((position1[0] + 300, position1[1] + 300), fieldMode),
-                  Field((position2[0] + 350, position2[1] + 350), fieldMode),
-                  Field((position3[0] + 400, position3[1] + 400), fieldMode),
-                  Field((position4[0] + 350, position4[1] + 350), fieldMode)]
-        House(fields, Field.fields[startIndex + pathLength * 2])
+            fields = [Field(start3, House.fieldMode),
+                      Field((start3[0] + offset, start3[1] + offset), House.fieldMode),
+                      Field((start3[0] + offset * 2, start3[1]), House.fieldMode),
+                      Field((start3[0] + offset, start3[1] - offset), House.fieldMode)]
+            House(fields, Field.fields[startIndex + pathLength * 2])
 
-        fields = [Field((position1[0], position1[1] + 300), fieldMode),
-                  Field((position2[0], position2[1] + 300), fieldMode),
-                  Field((position3[0], position3[1] + 400), fieldMode),
-                  Field((position4[0], position4[1] + 400), fieldMode)]
-        House(fields, Field.fields[startIndex + pathLength * 3])
+            fields = [Field(start4, House.fieldMode),
+                      Field((start4[0] + offset, start4[1] + offset), House.fieldMode),
+                      Field((start4[0], start4[1] + offset * 2), House.fieldMode),
+                      Field((start4[0] - offset, start4[1] + offset), House.fieldMode)]
+            House(fields, Field.fields[startIndex + pathLength * 3])
+
+        if House.mode == 1:
+            startIndex = 2
+            offsetFromCenter = 166
+            offsetX = 40
+            offsetY = 40
+
+            start1 = (center[0] - offsetFromCenter, center[1])
+            start2 = (center[0], center[1] - offsetFromCenter)
+            start3 = (center[0] + offsetFromCenter, center[1])
+            start4 = (center[0], center[1] + offsetFromCenter)
+
+            fields = [Field(start1, House.fieldMode),
+                      Field((start1[0] - offsetX, start1[1] - offsetY), House.fieldMode),
+                      Field((start1[0] - offsetX, start1[1]), House.fieldMode),
+                      Field((start1[0] - offsetX, start1[1] + offsetY), House.fieldMode)]
+            House(fields, Field.fields[startIndex])
+
+            fields = [Field(start2, House.fieldMode),
+                      Field((start2[0] + offsetX, start2[1] - offsetY), House.fieldMode),
+                      Field((start2[0], start2[1] - offsetY), House.fieldMode),
+                      Field((start2[0] - offsetX, start2[1] - offsetY), House.fieldMode)]
+            House(fields, Field.fields[startIndex + pathLength])
+
+            fields = [Field(start3, House.fieldMode),
+                      Field((start3[0] + offsetX, start3[1] + offsetY), House.fieldMode),
+                      Field((start3[0] + offsetX, start3[1]), House.fieldMode),
+                      Field((start3[0] + offsetX, start3[1] - offsetY), House.fieldMode)]
+            House(fields, Field.fields[startIndex + pathLength * 2])
+
+            fields = [Field(start4, House.fieldMode),
+                      Field((start4[0] - offsetX, start4[1] + offsetY), House.fieldMode),
+                      Field((start4[0], start4[1] + offsetY), House.fieldMode),
+                      Field((start4[0] + offsetX, start4[1] + offsetY), House.fieldMode)]
+            House(fields, Field.fields[startIndex + pathLength * 3])

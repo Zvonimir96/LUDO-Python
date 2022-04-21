@@ -27,7 +27,7 @@ class Button(Neopixel):
         self.height = None
         self.image = None
 
-        self.imageNumber = False
+        self.imageNumber = 1
         self.enabled = False
 
         self.changeImage()
