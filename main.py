@@ -1,50 +1,33 @@
 import pygame
-import time
-
-from color import Color
-from mapElements.buttons.buttonListener import ButtonListener
-from mapElements.buttons.diceButton import DiceButton
-from mapElements.dice import Dice
-from map import Map
-from mapElements.buttons.button import Button
-from mapElements.field import Field
-from player import Player
-from settings import fadeTime
+from layot import draw
+from utilities import display_width, display_height
+from controller import init
+from controller import is_button_clicked
+from animaton import update as update_animations
 
 pygame.init()
+init()
 
-clock = time.time() + fadeTime
+screen = pygame.display.set_mode((display_width, display_height))
+
 running = True
-
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-
-Map.create()
-Player.create()
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-        if event.type == pygame.MOUSEBUTTONUP:
-            ButtonListener.buttonClicked(Button.isAnyButtonClicked(pygame.mouse.get_pos()))
-
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-            if event.key == pygame.K_2:
-                pass
 
-    if clock <= time.time():
-        clock = time.time() + fadeTime
-        Field.fadeAll()
-        Button.fadeAll()
-        Dice.doRainbow()
-
-    Dice.doAnimation()
+        if event.type == pygame.MOUSEBUTTONUP:
+            is_button_clicked(pygame.mouse.get_pos())
 
     screen.fill((0, 0, 0))
-    Map.draw(screen)
+
+    draw(screen)
+    update_animations()
+
     pygame.display.flip()
 
 pygame.quit()
