@@ -1,40 +1,36 @@
 import pygame
 
 from utilities import positions_path, house_field_representation, path_line_width, white_color, house_exit_index, path_length
-from .field import Field
+from ..field import Field
 from .path import path_fields
 
-houses = []
 
-
-# House contains four field elements
+# Class House is data structure that consists with two variables.
+# Fields represent positions that figure can ocupy.
+# Exit field represents position where figures exit house.
 class House:
     def __init__(self, fields, exit_field):
         self.fields = fields
 
-        # Field where figures exit house
         self.exit_field = exit_field
 
     def draw(self, screen):
         # Draw lines between field elements in house
-        pygame.draw.line(screen, white_color, self.exit_field.get_position(), self.fields[0].get_position(), path_line_width)
-        pygame.draw.line(screen, white_color, self.fields[0].get_position(), self.fields[1].get_position(), path_line_width)
-        pygame.draw.line(screen, white_color, self.fields[1].get_position(), self.fields[2].get_position(), path_line_width)
-        pygame.draw.line(screen, white_color, self.fields[2].get_position(), self.fields[3].get_position(), path_line_width)
-        pygame.draw.line(screen, white_color, self.fields[3].get_position(), self.fields[0].get_position(), path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.exit_field.position, self.fields[0].position, path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[0].position, self.fields[1].position, path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[1].position, self.fields[2].position, path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[2].position, self.fields[3].position, path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[3].position, self.fields[0].position, path_line_width)
 
         # Draw all fields in house
         for field in self.fields:
             field.draw(screen)
 
-    def get_exit_field(self):
-        return self.exit_field
 
-    def get_field(self, index):
-        return self.fields[index]
+# Create variable where houses will be saved
+houses = []
 
 
-# Create houses to be drawn
 def create_houses():
     file_object = open(f'{positions_path}/house.txt', 'r')
 
@@ -48,8 +44,7 @@ def create_houses():
             line = file_object.readline()
 
             # Split coordinates to x and y
-            position_string = line.split(', ')
-            position_string[1].replace('\n', ' ')
+            position_string = line.split()
 
             position = float(position_string[0]), float(position_string[1])
             house_fields.append(Field(position, house_field_representation))

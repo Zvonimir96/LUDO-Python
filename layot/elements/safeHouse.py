@@ -2,12 +2,13 @@ import pygame
 
 from utilities import positions_path, safe_house_field_representation, safe_house_entrance_index, path_line_width, \
     white_color, path_length
-from .field import Field
+from ..field import Field
 from .path import path_fields
 
-safe_houses = []
 
-
+# Class SafeHouse is data structure that consists with two variables.
+# Fields represent positions that figure can ocupy.
+# Exit field represents position from where figure can enter safe house.
 class SafeHouse:
     def __init__(self, fields, entrance_field):
         self.fields = fields
@@ -17,26 +18,23 @@ class SafeHouse:
 
     def draw(self, screen):
         # Draw lines between field elements in safe house
-        pygame.draw.line(screen, white_color, self.entrance_field.get_position(), self.fields[0].get_position(),
+        pygame.draw.line(screen, white_color.to_rgb(), self.entrance_field.position, self.fields[0].position,
                          path_line_width)
-        pygame.draw.line(screen, white_color, self.fields[0].get_position(), self.fields[1].get_position(),
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[0].position, self.fields[1].position,
                          path_line_width)
-        pygame.draw.line(screen, white_color, self.fields[1].get_position(), self.fields[2].get_position(),
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[1].position, self.fields[2].position,
                          path_line_width)
-        pygame.draw.line(screen, white_color, self.fields[2].get_position(), self.fields[3].get_position(),
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[2].position, self.fields[3].position,
                          path_line_width)
 
         for field in self.fields:
             field.draw(screen)
 
-    def get_entrance_field(self):
-        return self.entrance_field
-
-    def get_field(self, index):
-        return self.fields[index]
-
 
 # Create houses to be drawn
+safe_houses = []
+
+
 def create_safe_houses():
     file_object = open(f'{positions_path}/safeHouse.txt', 'r')
 
@@ -50,8 +48,7 @@ def create_safe_houses():
             line = file_object.readline()
 
             # Split coordinates to x and y
-            position_string = line.split(', ')
-            position_string[1].replace('\n', ' ')
+            position_string = line.split()
 
             position = float(position_string[0]), float(position_string[1])
             house_fields.append(Field(position, safe_house_field_representation))

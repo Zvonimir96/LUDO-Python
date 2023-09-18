@@ -1,6 +1,6 @@
 from layot import houses, button_sets
-from utilities import available_colors
-from figure import Figure
+from utilities import available_colors, black_color
+from .figure import Figure
 from animaton import add_animation, remove_animation, AnimationType
 
 
@@ -11,16 +11,14 @@ class Player:
 
         # Get house and buttons layout for player
         self.house = houses[orderNumber]
-        self.house.change_color(self.color)
         self.buttons = button_sets[orderNumber]
 
         self.figures = []
         for i in range(4):
             self.figures.append(Figure(self.house.fields[i], self.color))
 
-        for button in self.buttons:
-            button.change_color(self.color)
-            add_animation(button, AnimationType.BUTTON_ENABLE)
+        self._change_color()
+        self.enable_buttons()
 
         # LUDO can be played with two players
         # Not everyone has to play
@@ -36,12 +34,6 @@ class Player:
         self.color = available_colors.pop(0)
         self._change_color()
 
-    def select_color(self):
-        # Hide buttons and disable animation
-        for button in self.buttons:
-            button.enabled = False
-            remove_animation(button)
-
     def _change_color(self):
         # Change color of all buttons and figures
         for button in self.buttons:
@@ -50,41 +42,22 @@ class Player:
         for figure in self.figures:
             figure.set_color(self.color)
 
-
-
-
-
-    def setInactive(self):
-        self.disableButtons()
-        self.color.setValue(0)
-        for figure in self.figures:
-            figure.setColor()
-
-    def enableButtons(self):
+    def disable(self):
+        # Hide buttons and disable animation
         for button in self.buttons:
-            button.enable()
+            button.enabled = False
+            remove_animation(button)
 
-    def disableButtons(self):
+        self.color = black_color
+        self._change_color()
+
+    def enable_buttons(self):
         for button in self.buttons:
-            button.disable()
+            button.enabled = True
+            add_animation(button, AnimationType.BUTTON_ENABLE)
 
-    def setPlayable(self):
-        self.disableButtons()
-        self.playable = True
-
-    def isPlayable(self):
-        return self.playable
-
-    @staticmethod
-    def next():
-        newPlayer = Player.playerOnTurn + 1
-
-        if newPlayer > len(Player.playablePlayers):
-            newPlayer = 0
-
-        Player.playerOnTurn = newPlayer
-        Dice.setColor(Player.playerOnTurn.color.get())
-        Dice.setFade()
-
-        global state
-        state = Player.playablePlayers[Player.playerOnTurn].orderNumber
+    def disable_buttons(self):
+        # Hide buttons and disable animation
+        for button in self.buttons:
+            button.enabled = False
+            remove_animation(button)

@@ -1,118 +1,30 @@
 import pygame
-
-from project.layout2.neopixel import Neopixel
-from project.utilities.settings import imageScale, fade_rate, fade_max_limit, fade_min_limit
+from utilities import images_size, fade_rate, fade_max_limit, fade_min_limit, images_path
 
 
-class Button(Neopixel):
-    buttonNumber = 0
-    buttons = []
+class Button:
+    def __init__(self, position, rotation, image_name):
+        # Screen x and y positions
+        self.position = position
 
-    def __init__(self, position, angle, maxImageNumber, imageName):
-        super().__init__(position)
-        Button.buttons.append(self)
-
-        self.angle = angle
-        self.maxImageNumber = maxImageNumber
-        self.imageName = imageName
-        self.alfa = 255
-
-        self.fading = False
-        self.fadeUp = False
-
-        self.buttonNumber = Button.buttonNumber
-        Button.buttonNumber = Button.buttonNumber + 1
-
-        self.width = None
-        self.height = None
-        self.image = None
-
-        self.imageNumber = 1
-        self.enabled = False
-
-        self.changeImage()
-
-    def setFade(self):
-        self.fading = True
-
-    def disableFade(self):
-        self.fading = False
-
-    def disable(self):
-        self.enabled = False
-
-    def enable(self):
+        # Button can be disabled
         self.enabled = True
 
-    def setColor(self, color):
-        super().setColor(color)
-        self.changeColor()
+        # Set button image
+        self.image = pygame.image.load(images_path + image_name)
+        self.image = pygame.transform.rotate(self.image, rotation)
+        self.image = pygame.transform.scale(self.image, (images_size, images_size))
 
     def draw(self, screen):
-        if self.enabled:
-            screen.blit(self.image, (self.position[0] - self.width / 2, self.position[1] - self.height / 2))
+        screen.blit(self.image, (self.position[0], self.position[1]))
 
-    def changeImage(self):
-        self.imageNumber = self.imageNumber + 1
-
-        if self.imageNumber >= self.maxImageNumber:
-            self.imageNumber = 1
-
-        self.image = pygame.image.load(self.imageName.replace('%', str(self.imageNumber)))
-
-        self.image = pygame.transform.rotate(self.image, self.angle)
-        self.height = self.image.get_height() / imageScale
-        self.width = self.image.get_width() / imageScale
-        self.image = pygame.transform.scale(self.image, (self.height, self.width))
-
-    def changeColor(self):
+    def change_color(self, color):
         imageArray = pygame.surfarray.pixels3d(self.image)
 
+        # Change color of each pixel
         for i in range(imageArray.shape[0]):
             for j in range(imageArray.shape[1]):
                 if imageArray[i, j, 0] > 50 or imageArray[i, j, 1] > 50 or imageArray[i, j, 2] > 50:
-                    imageArray[i, j] = self.color.get()
+                    imageArray[i, j] = color.to_rgb()
                 else:
                     imageArray[i, j] = (0, 0, 0)
-
-    def isButtonClicked(self, mousePosition):
-        if (self.position[0] - self.width / 2) < mousePosition[0] < (self.position[0] + self.width / 2) and \
-                (self.position[1] - self.height / 2) < mousePosition[1] < (self.position[1] + self.height / 2) and \
-                self.enabled:
-            return self.buttonNumber
-        return -1
-
-    def fade(self):
-        if self.fadeUp:
-            self.alfa += fade_rate
-        else:
-            self.alfa -= fade_rate
-
-        if self.alfa >= fade_max_limit:
-            self.alfa = fade_max_limit
-            self.fadeUp = False
-        elif self.alfa <= fade_min_limit:
-            self.alfa = fade_min_limit
-            self.fadeUp = True
-
-        self.image.set_alpha(self.alfa)
-
-    @staticmethod
-    def fadeAll():
-        for button in Button.buttons:
-            if button.fading:
-                button.fade()
-
-    @staticmethod
-    def isAnyButtonClicked(mousePosition):
-        for button in Button.buttons:
-            buttonNumber = button.isButtonClicked(mousePosition)
-            if buttonNumber != -1:
-                return buttonNumber
-
-        return -1
-
-    @staticmethod
-    def drawAll(screen):
-        for button in Button.buttons:
-            button.draw(screen)

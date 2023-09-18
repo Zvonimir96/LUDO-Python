@@ -1,8 +1,7 @@
 import pygame
 from layot import draw
 from utilities import display_width, display_height
-from controller import init
-from controller import is_button_clicked
+from controller import init, is_button_clicked
 from animaton import update as update_animations
 
 pygame.init()
@@ -25,8 +24,8 @@ while running:
 
     screen.fill((0, 0, 0))
 
-    draw(screen)
     update_animations()
+    draw(screen)
 
     pygame.display.flip()
 
