@@ -1,7 +1,6 @@
 from layot import houses, button_sets
 from utilities import available_colors, black_color
 from .figure import Figure
-from animaton import add_animation, remove_animation, AnimationType
 
 
 class Player:
@@ -18,7 +17,6 @@ class Player:
             self.figures.append(Figure(self.house.fields[i], self.color))
 
         self._change_color()
-        self.enable_buttons()
 
         # LUDO can be played with two players
         # Not everyone has to play
@@ -34,6 +32,10 @@ class Player:
         self.color = available_colors.pop(0)
         self._change_color()
 
+    def set_color(self, color):
+        self.color = color
+        self._change_color()
+
     def _change_color(self):
         # Change color of all buttons and figures
         for button in self.buttons:
@@ -41,23 +43,3 @@ class Player:
 
         for figure in self.figures:
             figure.set_color(self.color)
-
-    def disable(self):
-        # Hide buttons and disable animation
-        for button in self.buttons:
-            button.enabled = False
-            remove_animation(button)
-
-        self.color = black_color
-        self._change_color()
-
-    def enable_buttons(self):
-        for button in self.buttons:
-            button.enabled = True
-            add_animation(button, AnimationType.BUTTON_ENABLE)
-
-    def disable_buttons(self):
-        # Hide buttons and disable animation
-        for button in self.buttons:
-            button.enabled = False
-            remove_animation(button)

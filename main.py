@@ -1,11 +1,11 @@
 import pygame
 from layot import draw
 from utilities import display_width, display_height
-from controller import init, is_button_clicked
+from controller import StateMachine, is_button_clicked
 from animaton import update as update_animations
 
 pygame.init()
-init()
+StateMachine.init()
 
 screen = pygame.display.set_mode((display_width, display_height))
 
