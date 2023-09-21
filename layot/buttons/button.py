@@ -3,9 +3,9 @@ from utilities import images_size, fade_rate, fade_max_limit, fade_min_limit, im
 
 
 class Button:
-    def __init__(self, position, rotation, image_name):
+    def __init__(self, draw_position, rotation, image_name):
         # Screen x and y positions
-        self.position = position
+        self.draw_position = draw_position
 
         # Button can be disabled
         self.enabled = True
@@ -16,7 +16,7 @@ class Button:
         self.image = pygame.transform.scale(self.image, (images_size, images_size))
 
     def draw(self, screen):
-        screen.blit(self.image, (self.position[0], self.position[1]))
+        screen.blit(self.image, (self.draw_position[0], self.draw_position[1]))
 
     def change_color(self, color):
         imageArray = pygame.surfarray.pixels3d(self.image)

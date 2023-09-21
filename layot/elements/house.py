@@ -1,6 +1,8 @@
 import pygame
 
 from utilities import positions_path, house_field_representation, path_line_width, white_color, house_exit_index, path_length
+
+from ..position import Position, PositionType
 from ..field import Field
 from .path import path_fields
 
@@ -16,11 +18,11 @@ class House:
 
     def draw(self, screen):
         # Draw lines between field elements in house
-        pygame.draw.line(screen, white_color.to_rgb(), self.exit_field.position, self.fields[0].position, path_line_width)
-        pygame.draw.line(screen, white_color.to_rgb(), self.fields[0].position, self.fields[1].position, path_line_width)
-        pygame.draw.line(screen, white_color.to_rgb(), self.fields[1].position, self.fields[2].position, path_line_width)
-        pygame.draw.line(screen, white_color.to_rgb(), self.fields[2].position, self.fields[3].position, path_line_width)
-        pygame.draw.line(screen, white_color.to_rgb(), self.fields[3].position, self.fields[0].position, path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.exit_field.draw_position, self.fields[0].draw_position, path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[0].draw_position, self.fields[1].draw_position, path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[1].draw_position, self.fields[2].draw_position, path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[2].draw_position, self.fields[3].draw_position, path_line_width)
+        pygame.draw.line(screen, white_color.to_rgb(), self.fields[3].draw_position, self.fields[0].draw_position, path_line_width)
 
         # Draw all fields in house
         for field in self.fields:
@@ -46,8 +48,10 @@ def create_houses():
             # Split coordinates to x and y
             position_string = line.split()
 
-            position = float(position_string[0]), float(position_string[1])
-            house_fields.append(Field(position, house_field_representation))
+            position = Position(PositionType.HOUSE, j)
+
+            draw_position = float(position_string[0]), float(position_string[1])
+            house_fields.append(Field(draw_position, house_field_representation, position))
         else:
             # Create new house and save it in houses variable, so we can access them later
             houses.append(House(house_fields, path_fields[house_exit_index + path_length * i]))
