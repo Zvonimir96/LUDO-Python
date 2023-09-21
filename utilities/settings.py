@@ -67,13 +67,13 @@ buttons_offset = 50
 # Animation
 fade_rate = 10
 fade_time = 0.05
-# TODO provjeriti da nije 255
 fade_max_limit = 250
 fade_min_limit = 50
 fade_alfa = fade_max_limit
 fade_direction = False
 
 # Dice roll animation
+dice_roll_animation_enabled = False
 dice_animation_threshold = 150
 dice_animation_increment = 5
 dice_animation_counter = 1

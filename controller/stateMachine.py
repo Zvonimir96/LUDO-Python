@@ -1,10 +1,11 @@
 from copy import copy
+from random import randint
 
-from animaton import add_animation, AnimationType, remove_animation
+from animaton import add_animation, AnimationType, remove_animation, roll_dice_animation
 from dice import Dice
 from layot import dice_numbers, dice_fields
 from player import Player
-from utilities import black_color
+from utilities import black_color, dice_roll_animation_enabled
 from .gameState import GameState
 
 
@@ -30,17 +31,9 @@ def dice_disable_animation():
         remove_animation(dice_fields[index_field - 1])
 
 
-# TODO vidjeti šta s ovime
-def roll_dice_animation():
-    global is_dice_rolling
-    is_dice_rolling = True
-
-    Dice.set_dice_number()
-
-
 class StateMachine:
     game_state = GameState.select_color
-    player_on_turn =-1
+    player_on_turn = -1
     players = []
 
     @staticmethod
@@ -53,8 +46,29 @@ class StateMachine:
             StateMachine.players.append(player)
 
     @staticmethod
-    def enable_player_on_turn():
-        pass
+    def roll_dice():
+        # Disable dice action animation
+        dice_disable_animation()
+
+        Dice.number = randint(1, 6)
+
+        # Roll animation is disabled only for testing purposes
+        if dice_roll_animation_enabled:
+            # Enable dice roll animation
+            roll_dice_animation(StateMachine.dice_roll_done)
+
+        else:
+            Dice.set_dice_number()
+            StateMachine.dice_roll_done()
+
+    @staticmethod
+    def dice_roll_done():
+        print('roll dice done')
+
+        enable_player_buttons(StateMachine._get_player_on_turn())
+
+        # Set new game state
+        StateMachine.game_state = GameState.player_action
 
     @staticmethod
     def next_player():

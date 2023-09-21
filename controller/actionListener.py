@@ -1,6 +1,3 @@
-from copy import copy
-from random import randint
-
 from layot import button_sets, dice_fields
 from utilities import images_size, dice_offset, black_color
 from dice import Dice
@@ -54,9 +51,12 @@ def button_action(player_number, button_number):
             if playable_players == 4:
                 StateMachine.start_game()
 
-    # Player action based on dice number
+    elif StateMachine.game_state == GameState.player_action:
+        pass
 
 
 def dice_action():
     if StateMachine.game_state == GameState.select_color:
         StateMachine.start_game()
+    elif StateMachine.game_state == GameState.dice_action:
+        StateMachine.roll_dice()

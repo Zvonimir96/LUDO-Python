@@ -7,13 +7,18 @@ from .animations import animations
 
 update_time = time() + utilities.fade_time
 
-# TODO callback function
 is_dice_rolling = False
 callback_fun = None
 
 
+def roll_dice_animation(callback):
+    global is_dice_rolling, callback_fun
+    is_dice_rolling = True
+    callback_fun = callback
+
+
 def update():
-    global update_time, is_dice_rolling
+    global update_time, is_dice_rolling, callback_fun
     if update_time <= time():
         update_time = time() + utilities.fade_time
 
@@ -48,4 +53,4 @@ def update():
                 utilities.dice_animation_counter = 1
                 utilities.dice_animation_change_counter = 0
 
-                # TODO callback_fun()
+                callback_fun()
