@@ -78,3 +78,7 @@ dice_animation_threshold = 150
 dice_animation_increment = 5
 dice_animation_counter = 1
 dice_animation_change_counter = 0
+
+# Field default color
+default_color_value = 200
+default_color_saturation = 0.8

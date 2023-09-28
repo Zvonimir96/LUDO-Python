@@ -18,7 +18,7 @@ class Button:
     def draw(self, screen):
         screen.blit(self.image, (self.draw_position[0], self.draw_position[1]))
 
-    def change_color(self, color):
+    def set_color(self, color):
         imageArray = pygame.surfarray.pixels3d(self.image)
 
         # Change color of each pixel

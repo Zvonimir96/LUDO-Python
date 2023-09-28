@@ -1,5 +1,6 @@
 from layot import button_sets, dice_fields
-from utilities import images_size, dice_offset, black_color
+from utilities import images_size, dice_offset
+from layot import Position, PositionType
 from dice import Dice
 
 from .gameState import GameState
@@ -31,7 +32,7 @@ def button_action(player_number, button_number):
     #   1 - button right
     #   2 - button submit
 
-    if StateMachine.game_state == GameState.select_color:
+    if StateMachine.game_state == GameState.SELECT_COLOR:
         if button_number == 0:
             StateMachine.players[player_number].change_color_left()
 
@@ -51,12 +52,27 @@ def button_action(player_number, button_number):
             if playable_players == 4:
                 StateMachine.start_game()
 
-    elif StateMachine.game_state == GameState.player_action:
-        pass
+    elif StateMachine.game_state == GameState.CANNOT_PLAY:
+        if button_number == 2:
+            StateMachine.next_player()
+
+    elif StateMachine.game_state == GameState.REPEAT_ROLL:
+        if button_number == 2:
+            StateMachine.roll_dice()
+
+    else:
+        if button_number == 0:
+            StateMachine.select_figure_left()
+
+        elif button_number == 1:
+            StateMachine.select_figure_right()
+
+        elif button_number == 2:
+            StateMachine.next_player()
 
 
 def dice_action():
-    if StateMachine.game_state == GameState.select_color:
+    if StateMachine.game_state == GameState.SELECT_COLOR:
         StateMachine.start_game()
-    elif StateMachine.game_state == GameState.dice_action:
+    elif StateMachine.game_state == GameState.DICE_ACTION:
         StateMachine.roll_dice()

@@ -2,6 +2,8 @@ from enum import Enum
 
 
 class GameState(Enum):
-    select_color = 0
-    dice_action = 1
-    player_action = 2
+    SELECT_COLOR = 0
+    DICE_ACTION = 1
+    PLAYER_ACTION = 2
+    CANNOT_PLAY = 3
+    REPEAT_ROLL = 4

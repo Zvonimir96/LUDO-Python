@@ -3,10 +3,15 @@ from random import randint
 
 from animaton import add_animation, AnimationType, remove_animation, roll_dice_animation
 from dice import Dice
-from layot import dice_numbers, dice_fields
+from layot import dice_numbers, dice_fields, PositionType
 from player import Player
-from utilities import black_color, dice_roll_animation_enabled
+from utilities import dice_roll_animation_enabled, fade_alfa, fade_max_limit, fade_min_limit
+
 from .gameState import GameState
+
+
+def get_player_on_turn():
+    return StateMachine.players[StateMachine.player_on_turn]
 
 
 def enable_player_buttons(player):
@@ -31,8 +36,38 @@ def dice_disable_animation():
         remove_animation(dice_fields[index_field - 1])
 
 
+def exit_house_animation_enable(figure):
+    # Set color value to the global fade rate
+    figure.field.color.value = fade_alfa
+    add_animation(figure.field, AnimationType.MOVE)
+
+    # Set color value to the proportional global fade rate
+    figure.next_field.color.value = fade_max_limit - fade_alfa + fade_min_limit
+    add_animation(figure.next_field, AnimationType.MOVE)
+
+
+def exit_house_animation_disable(figure):
+    # Set color value to the global fade rate
+    figure.field.set_primary_color()
+    remove_animation(figure.field)
+
+    # Set color value to the proportional global fade rate
+    figure.next_field.set_default_color()
+    remove_animation(figure.next_field)
+
+
+def disable_figure_animation(figure):
+    if figure.field.position.type == PositionType.HOUSE:
+        exit_house_animation_disable(figure)
+
+
+def enable_figure_animation(figure):
+    if figure.field.position.type == PositionType.HOUSE:
+        exit_house_animation_enable(figure)
+
+
 class StateMachine:
-    game_state = GameState.select_color
+    game_state = GameState.SELECT_COLOR
     player_on_turn = -1
     players = []
 
@@ -47,9 +82,10 @@ class StateMachine:
 
     @staticmethod
     def roll_dice():
-        # Disable dice action animation
-        dice_disable_animation()
+        # Disable dice
+        StateMachine.disable_dice()
 
+        # Set random dice number
         Dice.number = randint(1, 6)
 
         # Roll animation is disabled only for testing purposes
@@ -58,20 +94,71 @@ class StateMachine:
             roll_dice_animation(StateMachine.dice_roll_done)
 
         else:
+            # Dice.number = 6
             Dice.set_dice_number()
             StateMachine.dice_roll_done()
 
     @staticmethod
     def dice_roll_done():
-        print('roll dice done')
+        player = get_player_on_turn()
 
-        enable_player_buttons(StateMachine._get_player_on_turn())
+        # Enable player buttons
+        enable_player_buttons(player)
 
-        # Set new game state
-        StateMachine.game_state = GameState.player_action
+        # Set new game state based on figure that is playable
+        figure = player.select_figure()
+        if figure is not None:
+            # Set default value of reroll
+            if GameState.REPEAT_ROLL:
+                player.re_rolls = 0
+
+            StateMachine.game_state = GameState.PLAYER_ACTION
+
+            # Set figure animation
+            enable_figure_animation(figure)
+
+        else:
+            if player.can_reroll():
+                StateMachine.game_state = GameState.REPEAT_ROLL
+                player.re_rolls += 1
+
+                if player.re_rolls >= 3:
+                    StateMachine.game_state = GameState.CANNOT_PLAY
+            else:
+                StateMachine.game_state = GameState.CANNOT_PLAY
+
+    @staticmethod
+    def select_figure_left():
+        player = get_player_on_turn()
+
+        # Disable last figure animation
+        disable_figure_animation(player.selected_figure)
+
+        # Select new figure
+        player.select_figure_left()
+
+        # Enable new figure animation
+        enable_figure_animation(player.selected_figure)
+
+    @staticmethod
+    def select_figure_right():
+        player = get_player_on_turn()
+
+        # Disable last figure animation
+        disable_figure_animation(player.selected_figure)
+
+        # Select new figure
+        player.select_figure_right()
+
+        # Enable new figure animation
+        enable_figure_animation(player.selected_figure)
 
     @staticmethod
     def next_player():
+        # Disable player on turn buttons
+        if StateMachine.player_on_turn != -1:
+            disable_player_buttons(StateMachine.players[StateMachine.player_on_turn])
+
         for i in range(4):
             StateMachine.player_on_turn += 1
 
@@ -81,16 +168,22 @@ class StateMachine:
             if StateMachine.players[StateMachine.player_on_turn].playable:
                 break
 
+        # Enable dice action
+        StateMachine.enable_dice(copy(get_player_on_turn().color))
+
+        # Set new game state
+        StateMachine.game_state = GameState.DICE_ACTION
+
     @staticmethod
     def set_dice_action():
         # Set dice color
-        Dice.color = copy(StateMachine._get_player_on_turn().color)
+        Dice.color = copy(get_player_on_turn().color)
 
         # Set dice animation
         dice_enable_animation()
 
         # Set new game state
-        StateMachine.game_state = GameState.dice_action
+        StateMachine.game_state = GameState.DICE_ACTION
 
     @staticmethod
     def start_game():
@@ -100,16 +193,10 @@ class StateMachine:
 
             if not player.playable:
                 # Remove disabled players
-                player.set_color(black_color)
+                player.disable()
 
         # Select first player
         StateMachine.next_player()
-
-        # Enable dice action
-        StateMachine.enable_dice(copy(StateMachine._get_player_on_turn().color))
-
-        # Set new game state
-        StateMachine.game_state = GameState.dice_action
 
     @staticmethod
     def select_player_color(player_number):
@@ -121,6 +208,7 @@ class StateMachine:
     def enable_dice(color):
         # Set dice color and set default number
         Dice.color = copy(copy(color))
+        Dice.number = 0
         Dice.set_dice_number()
 
         if not Dice.enabled:
@@ -145,7 +233,3 @@ class StateMachine:
                 playable_players += 1
 
         return playable_players
-
-    @staticmethod
-    def _get_player_on_turn():
-        return StateMachine.players[StateMachine.player_on_turn]

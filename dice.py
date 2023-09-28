@@ -13,7 +13,7 @@ class Dice:
     def set_dice_number():
         # Turn off field
         for field in dice_fields:
-            field.color.set_black_color()
+            field.set_default_color()
 
         # Set color of each field that represent the number
         for index_field in dice_numbers[Dice.number]:
