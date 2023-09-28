@@ -11,10 +11,6 @@ class Dice:
 
     @staticmethod
     def set_dice_number():
-        # Turn off field
-        for field in dice_fields:
-            field.set_default_color()
-
         # Set color of each field that represent the number
         for index_field in dice_numbers[Dice.number]:
             dice_fields[index_field].color = copy(Dice.color)

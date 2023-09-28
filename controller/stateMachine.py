@@ -2,10 +2,11 @@ from copy import copy
 from random import randint
 
 from animaton import add_animation, AnimationType, remove_animation, roll_dice_animation
+from animaton.animations import add_callback
 from dice import Dice
 from layot import dice_numbers, dice_fields, PositionType
 from player import Player
-from utilities import dice_roll_animation_enabled, fade_alfa, fade_max_limit, fade_min_limit
+from utilities import dice_roll_animation_enabled, fade_alfa, fade_max_limit, fade_min_limit, fade_range
 
 from .gameState import GameState
 
@@ -36,34 +37,54 @@ def dice_disable_animation():
         remove_animation(dice_fields[index_field - 1])
 
 
-def exit_house_animation_enable(figure):
+def enable_figure_animation(figure):
+    # Set start animation parameters
+
     # Set color value to the global fade rate
-    figure.field.color.value = fade_alfa
+    value = fade_alfa
+    figure.field.color.value = value
     add_animation(figure.field, AnimationType.MOVE)
 
-    # Set color value to the proportional global fade rate
-    figure.next_field.color.value = fade_max_limit - fade_alfa + fade_min_limit
-    add_animation(figure.next_field, AnimationType.MOVE)
+    # Calculate fade step
+    num_fields = len(figure.move_fields)
+    step = fade_range / num_fields
+
+    for field in figure.move_fields:
+        value -= step
+
+        # If value is lower than minimum fade rate, mirror it
+        if value < fade_min_limit:
+            value = fade_min_limit + fade_min_limit - value
+
+            # Negate fade step
+            step *= -1
+
+        # Set color value to the fade step
+        field.secondary_color = figure.get_color()
+        field.set_secondary_color()
+
+        field.color.value = value
+        add_animation(field, AnimationType.MOVE)
 
 
-def exit_house_animation_disable(figure):
+def disable_figure_animation(figure):
     # Set color value to the global fade rate
     figure.field.set_primary_color()
     remove_animation(figure.field)
 
     # Set color value to the proportional global fade rate
-    figure.next_field.set_default_color()
-    remove_animation(figure.next_field)
+    for i in range(len(figure.move_fields)):
+        # Remove field from array
+        field = figure.move_fields.pop()
+
+        # Set field color
+        field.secondary_color = None
+        field.set_default_color()
+        remove_animation(field)
 
 
-def disable_figure_animation(figure):
-    if figure.field.position.type == PositionType.HOUSE:
-        exit_house_animation_disable(figure)
-
-
-def enable_figure_animation(figure):
-    if figure.field.position.type == PositionType.HOUSE:
-        exit_house_animation_enable(figure)
+def exit_house_callback(animation):
+    print(animation)
 
 
 class StateMachine:
@@ -94,7 +115,7 @@ class StateMachine:
             roll_dice_animation(StateMachine.dice_roll_done)
 
         else:
-            # Dice.number = 6
+            Dice.number = 6
             Dice.set_dice_number()
             StateMachine.dice_roll_done()
 
@@ -154,11 +175,21 @@ class StateMachine:
         enable_figure_animation(player.selected_figure)
 
     @staticmethod
-    def next_player():
-        # Disable player on turn buttons
-        if StateMachine.player_on_turn != -1:
-            disable_player_buttons(StateMachine.players[StateMachine.player_on_turn])
+    def move_figure():
+        player = get_player_on_turn()
+        figure = player.selected_figure
 
+        # Disable player on turn buttons
+        disable_player_buttons(player)
+
+        # TODO Provjeriti radi li se o iozlasku iz kuće ili o običnom move
+        add_callback(figure.field, exit_house_callback)
+        add_callback(figure.next_field, exit_house_callback)
+
+        StateMachine.game_state = GameState.MOVE_ANIMATION
+
+    @staticmethod
+    def next_player():
         for i in range(4):
             StateMachine.player_on_turn += 1
 

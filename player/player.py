@@ -2,6 +2,7 @@ from copy import copy
 
 from dice import Dice
 from layot import houses, button_sets, PositionType, safe_houses
+from layot.elements.path import path_fields
 from utilities import available_colors, default_color_value, default_color_saturation, black_color
 from .figure import Figure
 
@@ -72,7 +73,7 @@ class Player:
         for figure in self.figures:
             figure.set_color(self.color)
 
-        # Fade player color
+        # Create fade color
         fade_color = copy(self.color)
         fade_color.value = default_color_value
         fade_color.saturation = default_color_saturation
@@ -146,7 +147,7 @@ class Player:
                 # TODO check if house exit field does not contain player figure
 
                 # Set next available field to move
-                figure.next_field = self.house.exit_field
+                figure.move_fields.append(self.house.exit_field)
                 return True
 
         elif figure_position.type == PositionType.SAFE_HOUSE:

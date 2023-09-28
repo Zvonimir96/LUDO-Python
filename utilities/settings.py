@@ -70,6 +70,7 @@ fade_time = 0.05
 fade_max_limit = 250
 fade_min_limit = 50
 fade_alfa = fade_max_limit
+fade_range = fade_max_limit - fade_min_limit
 fade_direction = False
 
 # Dice roll animation

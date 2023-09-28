@@ -7,6 +7,7 @@ class Animation:
         self.object = obj
         self.animation_type = animation_type
         self.fade_direction = True
+        self.callback = None
 
     def update(self):
         if self.animation_type == AnimationType.BUTTON_ENABLE:
@@ -32,6 +33,13 @@ class Animation:
 
             self.object.color.value = fade
 
+            if self.callback is not None and fade == utilities.fade_max_limit:
+                self.callback(self)
+
     def disable(self):
         if self.animation_type == AnimationType.BUTTON_ENABLE:
             self.object.image.set_alpha(utilities.fade_max_limit)
+
+        # Turn off field
+        if self.animation_type == AnimationType.DICE_ENABLE:
+            self.object.set_default_color()

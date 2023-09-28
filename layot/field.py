@@ -7,8 +7,13 @@ from utilities import circle_line_width, white_color, large_circle_size, small_c
 # Field is position that figure can take
 class Field:
     def __init__(self, draw_position, circle='large', position=None):
+        # Color that will be drawn
         self.color = None
+
+        # Color of figure on that field
         self.primary_color = None
+
+        # Color only used for animation
         self.secondary_color = None
 
         # Default color is black

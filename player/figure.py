@@ -7,8 +7,11 @@ class Figure:
         self.field.primary_color = copy(color)
         self.field.set_primary_color()
 
-        self.next_field = None
+        self.move_fields = []
 
     def set_color(self, color):
         self.field.primary_color = copy(color)
         self.field.set_primary_color()
+
+    def get_color(self):
+        return copy(self.field.primary_color)

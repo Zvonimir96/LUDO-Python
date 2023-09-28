@@ -7,3 +7,4 @@ class GameState(Enum):
     PLAYER_ACTION = 2
     CANNOT_PLAY = 3
     REPEAT_ROLL = 4
+    MOVE_ANIMATION = 5

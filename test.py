@@ -1,7 +1,20 @@
-from gameState import GameState
+from utilities import fade_max_limit, fade_min_limit
 
-g = GameState.select_color
+num_figures = 5
+fade_alfa = 100
 
-g = GameState(g.value -1)
+# Postaviti vrijednost početne pozicije
+value = fade_alfa
+print(value)
 
-print(g.value)
+fade_range = fade_max_limit - fade_min_limit
+step = fade_range/num_figures
+
+for i in range(num_figures):
+    value -= step
+
+    if value < fade_min_limit:
+        value = fade_min_limit + fade_min_limit - value
+        step = -step
+
+    print(value)

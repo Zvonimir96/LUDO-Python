@@ -60,7 +60,7 @@ def button_action(player_number, button_number):
         if button_number == 2:
             StateMachine.roll_dice()
 
-    else:
+    elif StateMachine.game_state == GameState.PLAYER_ACTION:
         if button_number == 0:
             StateMachine.select_figure_left()
 
@@ -68,7 +68,7 @@ def button_action(player_number, button_number):
             StateMachine.select_figure_right()
 
         elif button_number == 2:
-            StateMachine.next_player()
+            StateMachine.move_figure()
 
 
 def dice_action():
