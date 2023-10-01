@@ -1,7 +1,7 @@
 from copy import copy
 
 from layot import dice_fields, dice_numbers
-from utilities import Color
+from utilities import Color, black_color
 
 
 class Dice:
@@ -11,6 +11,10 @@ class Dice:
 
     @staticmethod
     def set_dice_number():
+        # Turn off all active fields
+        for field in dice_fields:
+            field.set_default_color()
+
         # Set color of each field that represent the number
         for index_field in dice_numbers[Dice.number]:
             dice_fields[index_field].color = copy(Dice.color)

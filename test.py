@@ -1,20 +1,10 @@
-from utilities import fade_max_limit, fade_min_limit
+list = ['a', 'b', 'c']
 
-num_figures = 5
-fade_alfa = 100
+try:
+    print(list[1])
 
-# Postaviti vrijednost početne pozicije
-value = fade_alfa
-print(value)
+except IndexError:
+    print('test')
 
-fade_range = fade_max_limit - fade_min_limit
-step = fade_range/num_figures
-
-for i in range(num_figures):
-    value -= step
-
-    if value < fade_min_limit:
-        value = fade_min_limit + fade_min_limit - value
-        step = -step
-
-    print(value)
+finally:
+    print('Finaly')

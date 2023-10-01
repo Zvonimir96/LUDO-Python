@@ -140,11 +140,28 @@ class Player:
         figure_position = figure.field.position
 
         if figure_position.type == PositionType.PATH:
-            pass
+            # TODO provjeriti može li u SH
+            next_position = figure_position + Dice.number
+
+            # If one of player figures is located on same position as figure destination return false
+            for fig in self.figures:
+                if fig.field.position == next_position:
+                    return False
+
+            # Set next available field to move
+            position = figure_position
+            for i in range(Dice.number):
+                position += 1
+                figure.move_fields.append(path_fields[position.index])
+
+            return True
 
         elif figure_position.type == PositionType.HOUSE:
             if Dice.number == 6:
-                # TODO check if house exit field does not contain player figure
+                # If one of player figures is located on same position as figure destination return false
+                for fig in self.figures:
+                    if fig.field.position == self.house.exit_field.position:
+                        return False
 
                 # Set next available field to move
                 figure.move_fields.append(self.house.exit_field)

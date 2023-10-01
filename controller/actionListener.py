@@ -58,7 +58,7 @@ def button_action(player_number, button_number):
 
     elif StateMachine.game_state == GameState.REPEAT_ROLL:
         if button_number == 2:
-            StateMachine.roll_dice()
+            StateMachine.set_dice_action()
 
     elif StateMachine.game_state == GameState.PLAYER_ACTION:
         if button_number == 0:

@@ -1,8 +1,7 @@
 from copy import copy
 from random import randint
 
-from animaton import add_animation, AnimationType, remove_animation, roll_dice_animation
-from animaton.animations import add_callback
+from animaton import add_animation, AnimationType, remove_animation, roll_dice_animation, add_callback, animations
 from dice import Dice
 from layot import dice_numbers, dice_fields, PositionType
 from player import Player
@@ -56,7 +55,7 @@ def enable_figure_animation(figure):
         if value < fade_min_limit:
             value = fade_min_limit + fade_min_limit - value
 
-            # Negate fade step
+            # Change fade step sign
             step *= -1
 
         # Set color value to the fade step
@@ -83,8 +82,25 @@ def disable_figure_animation(figure):
         remove_animation(field)
 
 
-def exit_house_callback(animation):
-    print(animation)
+def figure_callback_max(animation):
+    figure = get_player_on_turn().selected_figure
+
+    for field in figure.move_fields:
+        add_callback(field, figure_callback_min)
+
+    remove_animation(animation.object)
+
+
+def figure_callback_min(animation):
+    figure = get_player_on_turn().selected_figure
+
+    remove_animation(animation.object)
+
+    if animation.object != figure.move_fields[-1]:
+        return
+
+    StateMachine.next_player()
+    figure.move_fields.clear()
 
 
 class StateMachine:
@@ -115,7 +131,7 @@ class StateMachine:
             roll_dice_animation(StateMachine.dice_roll_done)
 
         else:
-            Dice.number = 6
+            # Dice.number = 6
             Dice.set_dice_number()
             StateMachine.dice_roll_done()
 
@@ -130,8 +146,7 @@ class StateMachine:
         figure = player.select_figure()
         if figure is not None:
             # Set default value of reroll
-            if GameState.REPEAT_ROLL:
-                player.re_rolls = 0
+            player.re_rolls = 0
 
             StateMachine.game_state = GameState.PLAYER_ACTION
 
@@ -144,6 +159,9 @@ class StateMachine:
                 player.re_rolls += 1
 
                 if player.re_rolls >= 3:
+                    # Set default value of reroll
+                    player.re_rolls = 0
+
                     StateMachine.game_state = GameState.CANNOT_PLAY
             else:
                 StateMachine.game_state = GameState.CANNOT_PLAY
@@ -182,14 +200,16 @@ class StateMachine:
         # Disable player on turn buttons
         disable_player_buttons(player)
 
-        # TODO Provjeriti radi li se o iozlasku iz kuće ili o običnom move
-        add_callback(figure.field, exit_house_callback)
-        add_callback(figure.next_field, exit_house_callback)
+        figure.move()
+        add_callback(figure.field, figure_callback_max)
 
         StateMachine.game_state = GameState.MOVE_ANIMATION
 
     @staticmethod
     def next_player():
+        if StateMachine.game_state == GameState.CANNOT_PLAY:
+            disable_player_buttons(get_player_on_turn())
+
         for i in range(4):
             StateMachine.player_on_turn += 1
 
@@ -207,11 +227,14 @@ class StateMachine:
 
     @staticmethod
     def set_dice_action():
-        # Set dice color
-        Dice.color = copy(get_player_on_turn().color)
+        player = get_player_on_turn()
+        disable_player_buttons(player)
 
-        # Set dice animation
-        dice_enable_animation()
+        # Disable dice animation
+        dice_disable_animation()
+
+        # Set dice color
+        StateMachine.enable_dice(player.color)
 
         # Set new game state
         StateMachine.game_state = GameState.DICE_ACTION
