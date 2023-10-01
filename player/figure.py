@@ -25,3 +25,16 @@ class Figure:
         # Exchange primary color of start and end field
         self.move_fields[0].primary_color = None
         self.field.primary_color = self.color
+
+    def set_position(self, field):
+        self.field = field
+        self.field.primary_color = self.color
+        self.field.set_primary_color()
+
+    def set_position_test(self, field):
+        self.field.primary_color = None
+        self.field.set_default_color()
+
+        self.field = field
+        self.field.primary_color = self.color
+        self.field.set_primary_color()

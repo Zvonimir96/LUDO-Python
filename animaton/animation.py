@@ -31,6 +31,14 @@ class Animation:
                 fade = utilities.fade_min_limit
                 self.fade_direction = True
 
+            # Change from secondary to primary color
+            if fade <= utilities.fade_min_limit and self.object.secondary_color is not None \
+                    and self.object.primary_color is not None:
+                if self.object.color == self.object.primary_color:
+                    self.object.set_secondary_color()
+                else:
+                    self.object.set_primary_color()
+
             self.object.color.value = fade
 
             if self.callback is not None:
@@ -47,6 +55,8 @@ class Animation:
             self.object.set_default_color()
 
         if self.animation_type == AnimationType.MOVE:
+            self.object.secondary_color = None
+
             if self.object.primary_color is None:
                 self.object.set_default_color()
             else:

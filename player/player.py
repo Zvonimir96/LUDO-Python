@@ -25,6 +25,12 @@ class Player:
         self.selected_figure = None
         self._change_color()
 
+        # TODO test figure position
+        if orderNumber == 3:
+            self.figures[1].set_position_test(path_fields[8])
+            self.figures[2].set_position_test(path_fields[37])
+            self.figures[3].set_position_test(self.safe_house.fields[2])
+
         # Sometimes player can roll more than once at one turn
         self.re_rolls = 0
 
@@ -87,6 +93,11 @@ class Player:
             field.default_color = fade_color
             field.set_default_color()
 
+    def get_empty_house_field(self):
+        for field in self.house.fields:
+            if field.color == black_color:
+                return field
+
     def select_figure_left(self):
         # This function can only be called when figure is selected
         index = self.figures.index(self.selected_figure)
@@ -98,7 +109,7 @@ class Player:
                 return figure
 
         # Iterate through figures from start to end
-        for figure in self.figures[:index]:
+        for figure in self.figures[:index+1]:
             if self._can_figure_move(figure):
                 self.selected_figure = figure
                 return figure
@@ -136,11 +147,50 @@ class Player:
 
         return True
 
+    def _can_fit_sh(self, num_filed):
+        if num_filed > 4:
+            return False
+
+        position = self.safe_house.fields[0].position
+
+        # Check for each position
+        for i in range(num_filed):
+            # Check for each figure
+            for figure in self.figures:
+                if figure.field.position == position:
+                    return False
+
+            position += 1
+
+        return True
+
     def _can_figure_move(self, figure):
         figure_position = figure.field.position
 
         if figure_position.type == PositionType.PATH:
-            # TODO provjeriti može li u SH
+            # Check if figure can go to safe house
+            sh_entrance_position = self.safe_house.entrance_field.position
+            distance_to_safe_house = figure_position.distance(sh_entrance_position)
+            if distance_to_safe_house < Dice.number:
+                safe_house_fields = Dice.number - distance_to_safe_house
+                # TODO Check if figure can fit into safe house
+                if not self._can_fit_sh(safe_house_fields):
+                    return False
+
+                # Add fields in front of the house
+                position = figure_position
+                for i in range(Dice.number - safe_house_fields):
+                    position += 1
+                    figure.move_fields.append(path_fields[position.index])
+
+                # Add fields in safe house
+                position = self.safe_house.fields[0].position
+                for i in range(safe_house_fields):
+                    figure.move_fields.append(self.safe_house.fields[position.index])
+                    position += 1
+
+                return True
+
             next_position = figure_position + Dice.number
 
             # If one of player figures is located on same position as figure destination return false

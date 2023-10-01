@@ -15,6 +15,9 @@ class Color:
     def __str__(self):
         return f'Hue: {self.hue}, Saturation: {self.saturation}, Value: {self.value}'
 
+    def __eq__(self, other):
+        return self.hue == other.hue
+
     # Brightness depends on value from HSV
     # Maximum value is 255
     def set_full_brightness(self):

@@ -6,6 +6,12 @@ class Position:
         self.type = position_type
         self.index = index
 
+    def distance(self, other):
+        if other.index > self.index:
+            return other.index - self.index
+        else:
+            return path_length*4 - self.index + other.index
+
     def __eq__(self, other):
         if self.type == other.type and self.index == other.index:
             return True
@@ -19,6 +25,6 @@ class Position:
         index = self.index + other
 
         if index >= path_length*4:
-            index = 0
+            index -= path_length*4
 
         return Position(self.type, index)

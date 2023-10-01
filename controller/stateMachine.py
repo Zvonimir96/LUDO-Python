@@ -90,6 +90,14 @@ def figure_callback_max(animation):
 
     remove_animation(animation.object)
 
+    # TODO doc i provjeriti
+    for player in StateMachine.players:
+        if player != get_player_on_turn():
+            for fig in player.figures:
+                if figure.field.position == fig.field.position:
+                    fig.set_position(player.get_empty_house_field())
+                    break
+
 
 def figure_callback_min(animation):
     figure = get_player_on_turn().selected_figure
@@ -131,7 +139,7 @@ class StateMachine:
             roll_dice_animation(StateMachine.dice_roll_done)
 
         else:
-            # Dice.number = 6
+            Dice.number = 6
             Dice.set_dice_number()
             StateMachine.dice_roll_done()
 
