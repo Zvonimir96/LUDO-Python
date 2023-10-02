@@ -25,12 +25,6 @@ class Player:
         self.selected_figure = None
         self._change_color()
 
-        # TODO test figure position
-        if orderNumber == 3:
-            self.figures[1].set_position_test(path_fields[8])
-            self.figures[2].set_position_test(path_fields[37])
-            self.figures[3].set_position_test(self.safe_house.fields[2])
-
         # Sometimes player can roll more than once at one turn
         self.re_rolls = 0
 

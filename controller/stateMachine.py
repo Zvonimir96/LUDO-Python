@@ -139,7 +139,7 @@ class StateMachine:
             roll_dice_animation(StateMachine.dice_roll_done)
 
         else:
-            Dice.number = 6
+            # Dice.number = 6
             Dice.set_dice_number()
             StateMachine.dice_roll_done()
 
