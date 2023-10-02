@@ -16,3 +16,4 @@ Development of the software solution for the created hardware can be followed on
 - Implement sounds
 - End game celebration
 - Executable file
+- Acceptance testing
