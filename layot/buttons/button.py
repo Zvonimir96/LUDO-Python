@@ -1,16 +1,24 @@
 import pygame
-from utilities import images_size, fade_rate, fade_max_limit, fade_min_limit, images_path
+
+from utilities import images_size, images_path
 
 
 class Button:
     def __init__(self, draw_position, rotation, image_name):
-        # Screen x and y positions
+        """
+        Handle and display button image. This class does not support button click.
+
+        :param draw_position: position on screen where field will be drawn.
+        :param rotation: image rotation.
+        :param image_name: image name to be drawn.
+        """
+
         self.draw_position = draw_position
 
         # Button can be disabled
         self.enabled = True
 
-        # Set button image
+        # Set button image, rotation and scale
         self.image = pygame.image.load(images_path + image_name)
         self.image = pygame.transform.rotate(self.image, rotation)
         self.image = pygame.transform.scale(self.image, (images_size, images_size))

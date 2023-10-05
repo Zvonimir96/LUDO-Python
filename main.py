@@ -4,6 +4,10 @@ from utilities import display_width, display_height
 from controller import StateMachine, is_button_clicked
 from animaton import update as update_animations
 
+# Popraviti set boja, boje sh i izlaza
+# BOja se ne promijeni na figurama
+# Rotacija kockice
+
 pygame.init()
 StateMachine.init()
 

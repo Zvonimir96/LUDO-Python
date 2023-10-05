@@ -1,6 +1,5 @@
 from layot import button_sets, dice_fields
 from utilities import images_size, dice_offset
-from layot import Position, PositionType
 from dice import Dice
 
 from .gameState import GameState
@@ -8,6 +7,15 @@ from .stateMachine import StateMachine
 
 
 def is_button_clicked(mouse_position):
+    """
+    Check ih any of the buttons or dice are clicked.
+    If any button is clicked call button_action.
+    If dice is clicked call dice_action.
+
+    :param mouse_position: coordinates of mouse position
+    :return: None
+    """
+
     # Iterate through all buttons
     for set_number, button_set in enumerate(button_sets):
         for button_number, button in enumerate(button_set):
@@ -27,10 +35,14 @@ def is_button_clicked(mouse_position):
 
 
 def button_action(player_number, button_number):
-    # Button number:
-    #   0 - button left
-    #   1 - button right
-    #   2 - button submit
+    """
+    Make an action based on button that is pressed and game state.
+    This function is only interface between application and user.
+
+    :param player_number: player index that corresponds to player in array of players
+    :param button_number: 0 - button left, 1 - button right, 2 - button submit
+    :return: None
+    """
 
     if StateMachine.game_state == GameState.SELECT_COLOR:
         if button_number == 0:
@@ -74,5 +86,6 @@ def button_action(player_number, button_number):
 def dice_action():
     if StateMachine.game_state == GameState.SELECT_COLOR:
         StateMachine.start_game()
+
     elif StateMachine.game_state == GameState.DICE_ACTION:
         StateMachine.roll_dice()

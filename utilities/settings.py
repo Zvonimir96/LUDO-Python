@@ -74,7 +74,7 @@ fade_range = fade_max_limit - fade_min_limit
 fade_direction = False
 
 # Dice roll animation
-dice_roll_animation_enabled = False
+dice_roll_animation_enabled = True
 dice_animation_threshold = 150
 dice_animation_increment = 5
 dice_animation_counter = 1

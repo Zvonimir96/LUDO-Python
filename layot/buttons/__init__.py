@@ -1,19 +1,26 @@
-from .arrowButton import ArrowButton
-from .submitButton import SubmitButton
+"""
+Create and draw all buttons on board.
+"""
 
 from utilities import positions_path
 
+from .arrowButton import ArrowButton
+from .submitButton import SubmitButton
+
+# On board there are 4 button sets, each for one player
+# Button set contains two arrow, and one submit button
 button_sets = []
 
+# Location of button positions on screen
 file_object = open(f'{positions_path}/buttons.txt', 'r')
 
-# Create button sets for each player
+# Create button set for each player
 for i in range(4):
     buttons = []
 
     # Each set has three buttons
     for j in range(3):
-        # Read line with position coordinates
+        # Read one position
         line = file_object.readline()
 
         # Split coordinates to x, y and angle of image

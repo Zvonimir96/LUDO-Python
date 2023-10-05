@@ -6,12 +6,22 @@ from ..position import Position, PositionType
 from ..field import Field
 from .path import path_fields
 
+# Contains house for each player
+# House order is same as player order
+houses = []
 
-# Class House is data structure that consists with two variables.
-# Fields represent positions that figure can ocupy.
-# Exit field represents position where figures exit house.
+# Location of houses fields position on screen
+file_object = open(f'{positions_path}/house.txt', 'r')
+
+
 class House:
     def __init__(self, fields, exit_field):
+        """
+        Data structure that contains fields that represent house, and field where house exit is.
+
+        :param fields: positions that figure can ocupy.
+        :param exit_field: position where figures exit house.
+        """
         self.fields = fields
 
         self.exit_field = exit_field
@@ -29,13 +39,7 @@ class House:
             field.draw(screen)
 
 
-# Create variable where houses will be saved
-houses = []
-
-
 def create_houses():
-    file_object = open(f'{positions_path}/house.txt', 'r')
-
     # Create four houses
     for i in range(4):
         house_fields = []
@@ -57,7 +61,6 @@ def create_houses():
             houses.append(House(house_fields, path_fields[house_exit_index + path_length * i]))
 
 
-# Draw all houses
 def draw_houses(screen):
     for house in houses:
         house.draw(screen)

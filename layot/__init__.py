@@ -1,3 +1,7 @@
+"""
+Create and draw all graphical elements.
+"""
+
 from .buttons import *
 from .elements import *
 from .position import *

@@ -9,7 +9,7 @@ Development of the software solution for the created hardware can be followed on
 [Git repository](https://github.com/Zvonimir96/LUDO-Atmega).
 
 <p align="center">
-  <img src="img_1.png" width="70%">
+  <img src="img.png" width="70%">
 </p>
 
 # Todo

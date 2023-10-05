@@ -1,9 +1,15 @@
-from ..field import Field
 from utilities import positions_path, dice_field_representation
 
+from ..field import Field
+
+# Dice contains 9 fields
+# This array is used by dice controller to show number
 dice_fields = []
 
-# Map fields that should be activated to represent each number on dice
+# Map fields of dice that should be activated to represent each number on dice
+# Number on dice is saved in key
+# Value is array of fields
+# Key 0 selects all fields on dice
 dice_numbers = {
     0: [0, 1, 2, 3, 4, 5, 6, 7, 8],
     1: [8],
@@ -14,17 +20,18 @@ dice_numbers = {
     6: [0, 1, 2, 4, 5, 6]
 }
 
+# Location of dice fields positions on screen
+file_object = open(f'{positions_path}/dice.txt', 'r')
+
 
 def create_dice():
-    file_object = open(f'{positions_path}/dice.txt', 'r')
-
     for i, line in enumerate(file_object):
-        # Split coordinates to x and y
+        # Read one position
         position_string = line.split()
 
         position = float(position_string[0]), float(position_string[1])
 
-        # Create new field and save it in path fields variable, so we can access them later
+        # Create new field and save it in dice fields variable
         dice_fields.append(Field(position, dice_field_representation))
 
 

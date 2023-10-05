@@ -1,9 +1,9 @@
 from copy import copy
 
 from dice import Dice
-from layot import houses, button_sets, PositionType, safe_houses
-from layot.elements.path import path_fields
+from layot import houses, button_sets, PositionType, safe_houses, path_fields
 from utilities import available_colors, default_color_value, default_color_saturation, black_color
+
 from .figure import Figure
 
 

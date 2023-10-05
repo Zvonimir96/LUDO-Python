@@ -1,3 +1,7 @@
+"""
+Create data sets that contains all elements positions.
+"""
+
 from .dice import create as create_dice
 from .path import create as create_path
 from .house import create as create_houses

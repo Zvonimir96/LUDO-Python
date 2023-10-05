@@ -1,7 +1,7 @@
 from copy import copy
 
 from layot import dice_fields, dice_numbers
-from utilities import Color, black_color
+from utilities import Color
 
 
 class Dice:

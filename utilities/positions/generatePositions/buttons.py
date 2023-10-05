@@ -19,7 +19,7 @@ def create():
 
     file_object.write(f'{start3[0]} {start3[1] - buttons_offset} 90\n')
     file_object.write(f'{start3[0]} {start3[1] + buttons_offset} -90\n')
-    file_object.write(f'{start3[0]} {start3[1]} -90\n')
+    file_object.write(f'{start3[0]} {start3[1]} 90\n')
 
     file_object.write(f'{start4[0] + buttons_offset} {start4[1]} 0\n')
     file_object.write(f'{start4[0] - buttons_offset} {start4[1]} 180\n')

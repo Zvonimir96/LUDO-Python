@@ -3,10 +3,24 @@ from utilities import path_length
 
 class Position:
     def __init__(self, position_type, index):
+        """
+        Logical position in mesh.
+
+        :param position_type: position can be in house, safe house or path.
+        :param index: index of a field in given position.
+        """
+
         self.type = position_type
         self.index = index
 
     def distance(self, other):
+        """
+        Calculate how many fields are between this and other position.
+
+        :param other: other position.
+        :return: integer number of distance between two positions.
+        """
+
         if other.index > self.index:
             return other.index - self.index
         else:

@@ -133,6 +133,8 @@ class StateMachine:
         # Set random dice number
         Dice.number = randint(1, 6)
 
+        Dice.number = 6
+
         # Roll animation is disabled only for testing purposes
         if dice_roll_animation_enabled:
             # Enable dice roll animation

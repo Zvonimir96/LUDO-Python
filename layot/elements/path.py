@@ -5,13 +5,15 @@ from utilities import white_color, path_line_width, path_field_representation, p
 from ..position import Position, PositionType
 from ..field import Field
 
+
+# Contains fields that create path
 path_fields = []
 
+# Location of path fields position on screen
+file_object = open(f'{positions_path}/path.txt', 'r')
 
-# Create fields to be drawn
+
 def create_path():
-    file_object = open(f'{positions_path}/path.txt', 'r')
-
     for i, line in enumerate(file_object):
         # Split coordinates to x and y
         position_string = line.split()
@@ -24,19 +26,18 @@ def create_path():
         path_fields.append(Field(draw_position, path_field_representation, position))
 
 
-# Path contains fields and lines between fields
 def draw_path(screen):
+    # Path contains fields and lines between each field
     draw_path_lines(screen)
     draw_path_fields(screen)
 
 
-# Draw each field
 def draw_path_fields(screen):
+    # Draw each field
     for field in path_fields:
         field.draw(screen)
 
 
-# Draw lines between fields
 def draw_path_lines(screen):
     first_field_position = path_fields[0].draw_position
 
@@ -48,5 +49,5 @@ def draw_path_lines(screen):
         pygame.draw.line(screen, white_color.to_rgb(), field_position, last_field_position, path_line_width)
         last_field_position = field_position
 
-    # Connect last and first file
+    # Draw line between last and first file
     pygame.draw.line(screen, white_color.to_rgb(), last_field_position, first_field_position, path_line_width)

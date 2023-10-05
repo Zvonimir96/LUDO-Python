@@ -7,14 +7,22 @@ from ..position import Position, PositionType
 from ..field import Field
 from .path import path_fields
 
+# Contains safe house for each player
+# Safe house order is same as player order
+safe_houses = []
 
-# Class SafeHouse is data structure that consists with two variables.
-# Fields represent positions that figure can ocupy.
-# Exit field represents position from where figure can enter safe house.
+# Location of safe houses fields position on screen
+file_object = open(f'{positions_path}/safeHouse.txt', 'r')
 
 
 class SafeHouse:
     def __init__(self, fields, entrance_field):
+        """
+        Data structure that contains fields that represent safe house, and field from where safe house is accessible.
+
+        :param fields: positions that figure can ocupy.
+        :param entrance_field: position from where safe house is accessible
+        """
         self.fields = fields
 
         # Field from where figures enter house
@@ -31,17 +39,12 @@ class SafeHouse:
         pygame.draw.line(screen, white_color.to_rgb(), self.fields[2].draw_position, self.fields[3].draw_position,
                          path_line_width)
 
+        # Draw all fields in safe house
         for field in self.fields:
             field.draw(screen)
 
 
-# Create houses to be drawn
-safe_houses = []
-
-
 def create_safe_houses():
-    file_object = open(f'{positions_path}/safeHouse.txt', 'r')
-
     # Create four safe houses
     for i in range(4):
         house_fields = []
